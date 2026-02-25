@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1024">
+    <title>강점 소개</title>
+    <style>
+        html {
+            overflow-y: scroll;
+        }
+
+        body {
+            margin: 0;
+            padding: 2rem;
+            background-image: url("image/bg.png");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            font-family: 'NanumSquareOTF', sans-serif;
+        }
+
+        .background-title {
+            position: absolute;
+            top: -1rem;
+            left: 2rem;
+            font-size: 6rem;
+            font-weight: 800;
+            color: rgba(0, 0, 0, 0.05);
+            pointer-events: none;
+            z-index: 0;
+            user-select: none;
+        }
+
+        .strength-box {
+            background: white;
+            border-radius: 1rem;
+            width: 80%;
+            max-width: 1000px;
+            margin: 4rem auto;
+            box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+            border: 1px solid #000;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+            transition: margin 0.3s ease;
+        }
+
+        .strength-box.collapsed {
+            margin: 1.5rem auto;
+        }
+
+        .strength-box.first.collapsed {
+            margin-top: 4rem !important;
+        }
+
+        .section-header {
+            padding: 1.2rem 1.5rem;
+            cursor: pointer;
+            background-color: white;
+            transition: background 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-header:hover {
+            background-color: #f2f2f2;
+        }
+
+        .title-label {
+            background: #000;
+            color: #fff;
+            padding: 0.3rem 0.8rem;
+            border-radius: 1rem;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .arrow-icon {
+            font-size: 1.2rem;
+            margin-left: 1rem;
+            user-select: none;
+        }
+
+        .section-content {
+            padding: 1.2rem 1.5rem 1.6rem 1.5rem;
+            /* 아래쪽 패딩만 1.8rem으로 증가 */
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .strength-box.collapsed .section-content {
+            display: none;
+        }
+
+        .description {
+            font-size: 0.95rem;
+            line-height: 1.65;
+            letter-spacing: 0;
+            word-break: keep-all;
+            font-family: 'NanumSquareOTF', sans-serif;
+        }
+
+
+
+        .section-lower {
+            display: flex;
+            align-items: stretch;
+            gap: 1.5rem;
+        }
+
+        .example-image {
+            width: 40%;
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-radius: 0.5rem;
+        }
+
+        .example-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: cover;
+            border-radius: 0.5rem;
+        }
+
+
+        .example-text {
+            flex: 1;
+            display: block;
+            margin-left: -0.8rem;
+        }
+
+
+        .example-label-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 0.5rem;
+        }
+
+        .example-label {
+            background: #000;
+            color: #fff;
+            padding: 0.3rem 0.8rem;
+            border-radius: 1rem;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .example-description {
+            font-size: 0.95rem;
+            line-height: 1.65;
+            font-weight: normal;
+            font-family: 'NanumSquareOTF', sans-serif;
+            letter-spacing: 0;
+            word-break: keep-all;
+        }
+
+
+        .divider {
+            border-top: 2px solid #000;
+            margin: 1.5rem 0;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10;
+            padding-top: 60px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .modal-content {
+            display: block;
+            margin: auto;
+            max-width: 90%;
+            max-height: 80%;
+            border-radius: 0.5rem;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* 4번째 카드 전용: 위쪽 여백만 줄임 */
+        .fourth-card .section-content {
+            padding-top: 0.6rem;
+        }
+
+        /* 구분선 */
+        .section-divider {
+            margin: 0.9rem 1.5rem 0 1.5rem;
+            border: none;
+            border-top: 1px solid #000;
+        }
+
+        /* 하단 첨부파일 블록 */
+        .section-lower {
+            padding-left: 1.5rem;
+            padding-top: 0.5rem;
+        }
+
+        /* 첨부파일 항목 줄 */
+        .section-lower .project-row {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        /* 아이콘 크기 통일 */
+        .section-lower .project-icon {
+            width: 1.3rem;
+            height: 1.3rem;
+        }
+
+        /* 링크 텍스트 스타일 */
+        .section-lower .project-attachment-link {
+            font-size: 0.7rem;
+            color: #1d1f20;
+            text-decoration: none;
+        }
+
+        .section-lower .project-attachment-link:hover {
+            text-decoration: underline;
+        }
+
+        .fourth-card .section-divider {
+            margin-bottom: 0rem;
+            /* 또는 0.2rem 정도 */
+        }
+        /* ===== 첫 번째 카드만 세로 레이아웃 ===== */
+
+.first .section-lower {
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.first .example-image-wrapper {
+    display: flex;
+    gap: 1rem;
+}
+
+.first .example-image {
+    flex: 1;
+    width: 100%;
+}
+
+.first .example-image img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+.video-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.video-container iframe {
+    width: 80%;
+    max-width: 960px;
+    height: 540px;
+}
+/* ===== 유튜브 스타일 플레이 오버레이 ===== */
+
+.video-thumb {
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.video-thumb img {
+    transition: transform 0.3s ease;
+}
+
+.video-thumb:hover img {
+    transform: scale(1.05);
+}
+
+.yt-play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 84px;
+    height: 60px;
+    background: rgba(255, 0, 0, 0.9);
+    border-radius: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.25s ease;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+}
+
+.video-thumb:hover .yt-play {
+    background: rgba(255, 0, 0, 1);
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+.yt-icon {
+    width: 0;
+    height: 0;
+    border-left: 22px solid white;
+    border-top: 14px solid transparent;
+    border-bottom: 14px solid transparent;
+    margin-left: 4px;
+}
+    </style>
+</head>
+
+<body>
+    <div class="background-title">STRENGTH</div>
+
+    <!-- 카드 1 -->
+    <div class="strength-box first">
+        <div class="section-header" onclick="toggleCard(this)">
+            <div class="title-label">세심함, 퀄리티에 대한 고집</div>
+            <div class="arrow-icon">▲</div>
+        </div>
+        <div class="section-content">
+            <div class="description">
+                플레이어에게 주고 싶은 경험을 계속해서 되새기고, 실제로 그러한 플레이가 펼쳐질 수 있도록 다방면에서 개선을 반복하는 것이 저만의 기획 프로세스입니다.   
+                <br>
+                기획 문서를 작성하는 데에 그치지 않고, 게임 엔진, 그래픽 툴 등 다양한 도구를 활용하여 아이디어를 실제 플레이 가능한 형태로 프로토타이핑하는것이 특기로,
+                전투 체험의 쾌적도를 위해 판정 범위, 스킬 애니메이션의 선딜레이를 반복 테스트하며 그 수지를 직접 조정하거나, 몬스터 콘셉트와 위험도에 부합하는 AI를 위해
+                BT의 세부 노드를 개선하고 전용 로직을 제작하는 등 실전 위주의 검증 절차를 통해 그 완성도를 상승시키고 있습니다.  
+                <br>
+                플레이어가 직면할 실제 전투 환경을 염두하며 작은 디테일을 놓치지 않는 작업 스타일은 비단 전투 기획 뿐 아니라 게임 기획 업무 전반에 좋은 재료가 되리라 확신합니다.
+            </div>
+            <div class="divider"></div>
+            <div class="section-lower">
+
+                <!-- 이미지 3장 -->
+                <div class="example-image-wrapper">
+                    <div class="example-image">
+                        <img src="image/st1.png" alt="예시 이미지1" onclick="openModal(this.src)">
+                    </div>
+                    <div class="example-image video-thumb" onclick="openVideoModal()">
+                        <img src="image/st2.png" alt="예시 영상 썸네일">
+                        <div class="yt-play">
+                            <div class="yt-icon"></div>
+                        </div>
+                    </div>
+                    <div class="example-image">
+                        <img src="image/st3.png" alt="예시 이미지3" onclick="openModal(this.src)">
+                    </div>
+                </div>
+            
+                <!-- 텍스트 -->
+                <div class="example-text">
+
+                    <!-- 예시 파트 -->
+                    <div class="example-label-wrapper">
+                        <div class="example-label">예시</div>
+                    </div>
+                    <div class="example-description">
+                        보스 몬스터「레이더 오버로드」를 기획하며 이러한 기획 프로세스가 더욱 확고해졌습니다. 해당 몬스터는 빠른 격투술로 지속적인 압박을 가하는 기교형 적으로 설계했으나, 대상과의 거리에 기반해 스킬을 사용하는 전투 로직 특성상 플레이어가 의도적으로 공격 거리를 허용한 뒤 곧바로 거리를 벌리면 스킬 사용이 결정된 그 자리에서 스킬을 실행하였기에, 상대하는 플레이어에게는 ‘날렵한 압박자’가 아닌 ‘헛손질하는 허술한 적’ 정도의 인식밖에 줄 수 없었습니다.
+                        빠른 전투 템포를 가진 「젠레스 존 제로」의 전투 특성상 보스 적으로부터 도망치는 플레이는 매우 드물지만, 플레이어의 특정 행동을 기대하고 거기에 의존한 AI를 구성해서는 안 된다는 생각이 있었기에「레이더 오버로드」근접 공격 시퀀스를 더욱 치밀하게 보강해야겠다는 필요성을 느꼈습니다.
+                    </div>
+                
+                    <div class="divider"></div>
+                
+                    <!-- 해결 파트 -->
+                    <div class="example-label-wrapper">
+                        <div class="example-label">해결</div>
+                    </div>
+                    <div class="example-description">
+                        처음엔 단순히 근접 공격 스킬들의 애니메이션들에 전진성을 추가하는 방안을 생각했으나, 정권 지르기처럼 전진성이 없는 동작까지도 미끄러지듯 밀고 들어오는 움직임을 보인다면 모션에서 기대되는 움직임과 실제 움직임 간의 부조화로 전투의 몰입감이 저해될 것으로 예상되어 해당 방안은 폐기했습니다.
+                        그렇게 다방면으로 고민하던 도중 격투 장르 게임들의 스탭 동작과 복싱 선수들의 움직임을 떠올렸고, 거기에 착안하여 접근, 선회, 후퇴 등의 동작을 가능하게 할 ‘풋워크 로직’을 추가하였습니다.
+                        풋워크 로직은 목표 대상과의 거리를 참조해 다각도의 리포지셔닝을 수행하는 로직으로, 백스탭·피벗 스탭·프레싱 등의 동작으로 구성되어 있습니다.
+                        그중 프레싱 동작을 일부 근접 스킬의 발동 시퀀스 앞에 배치하여 스킬 확정 시점에 거리 체크를 재실행하고, 거리에 따라 해당 동작을 선행하도록 구성했습니다.
+                        ‘접근하며 시전’이 아닌, 접근 후 시전이라는 시퀀스로 전진성 없는 스킬도 실행에 앞서 자연스럽게 대상과의 거리를 좁힐 수 있게 되었으며,
+                        그 결과 플레이어는 몬스터가 전투 중 여러 조건에 반응하여 유동적으로 다음 행동을 결정한다는 인상을 받게 되었고, 근접 스킬들의 유도력 또한 전반적으로 향상되어 레이더 오버로드는 더 이상 헛손질하지 않고 지속적인 압박을 가하는 강적으로 완성될 수 있었습니다.
+                    </div>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+
+    <!-- 카드 2 -->
+    <div class="strength-box collapsed">
+        <div class="section-header" onclick="toggleCard(this)">
+            <div class="title-label">끈기와 집요함에서 오는 문제 해결력</div>
+            <div class="arrow-icon">▼</div>
+        </div>
+        <div class="section-content">
+            <div class="description">
+                저는 기획 의도가 실제 플레이 경험으로 온전히 구현될 때까지 원인을 추적하고 수정하는 태도를 중요하게 생각합니다.
+                전투 및 콘텐츠는 작은 요소 하나에도 그 흐름이 크게 달라지며, 거기에서 오는 플레이 경험의 차이도 매우 크기 때문입니다. 
+                기획 아이디어를 직접 구현하고 테스트하다 보면 그 결과물이 의도와 다르게 작동하거나 예기치 못한 오류로 제 기능을 못하는 경우가 발생하곤 합니다.<br>
+                이러한 상황에 수차례 직면했지만, 임시방편식 수정이나 구현이 어려운 기능을 덜어내는 등 타협하는 방식으로
+                작업을 마무리하지 않았으며, 설령 수 시간이 소요될지라도 끝까지 원인을 파악하고 기획 의도에 부합도록 해결해 왔습니다.
+            </div>
+            <div class="divider"></div>
+            <div class="section-lower">
+                <div class="example-text">
+                    <div class="example-label-wrapper">
+                        <div class="example-label">사례</div>
+                    </div>
+                    <div class="example-description">
+                        1인 개발 프로젝트인「던전 다이버」의 몬스터인「모래 암살자」는 끈질긴 추적 능력을 핵심 특성으로 하는 적으로,
+                        추적 범위 안의 플레이어와의 거리가 벌어지면 플레이어의 현재 위치로 순간 이동하는 스킬을 보유하고 있습니다.
+                        해당 몬스터로부터 도주를 시도했을 때에 지속적으로 따라붙어 다른 장애물과「모래 암살자」가 중첩되는 상황이 발생하도록 하여
+                        도주의 리스크를 배가시키고, 플레이어로 하여금 첫 조우 지점에서의 전투를 유도하는 역할을 합니다. 
+                        그러나 프로토타입 테스트 과정에서 추적 중 스스로 낭떠러지로 떨어지거나, 지형에 끼어 움직이지 못하는 상황이 간헐적으로 발생했고,
+                        그 결과「모래 암살자」또한 ‘도주로 손쉼게 뿌리칠 수 있는 적’에 지나지 않게 되어버렸습니다.
+                    </div>
+                </div>
+
+                <div class="example-text">
+                    <div class="example-label-wrapper">
+                        <div class="example-label">해결</div>
+                    </div>
+                    <div class="example-description">
+                        각종 스테이터스 및 지형 조건을 변경해가며 모래 암살자와의 전투 상황을 테스트해본 결과,
+                        「모래 암살자」의 순간 이동 스킬이 플레이어가 점프 등에 의해 공중에 체공 중일 때에도 시전될 수 있는 것이 원인이었습니다.
+                        시전 시점의 공중 좌표를 목표 지점으로 설정하면서, 추적 범위를 순간적으로 벗어나는 문제가 발생했던 것입니다.
+                        이에 순간이동 스킬의 발동 조건을 ‘플레이어가 지면에 접촉 중일 때’로 한정하여 안전한 착지점이 확보되었을 때에만 순간이동이 가능하게 조정하였고, 
+                        추적 범위를 상향 조정하여 일정 수준의 고저 차에 가로막히지 않고 다시 정상적으로 플레이어를 추적할 수 있도록 개선했습니다. 
+                        그 결과,「모래 암살자」는 당초 기획대로 끈질긴 추적 능력을 보유할 수 있게 되었고, 마침내 플레이어가 도망 대신 전투 및 처치라는 대응법을 취하게 하는 데에 성공했습니다.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 카드 3 -->
+    <div class="strength-box collapsed">
+        <div class="section-header" onclick="toggleCard(this)">
+            <div class="title-label">객관성, 그에 기반한 성장성</div>
+            <div class="arrow-icon">▼</div>
+        </div>
+        <div class="section-content">
+            <div class="description">
+                스스로 부족한 점을 잘 파악하는 성향으로 자만하지 않으며, 항상 개선하고 발전하려는 태도를 가지고 있습니다.<br />
+                따라서 업무에 활용할 지식과 기술을 배우는 데에 시간과 노력을 들이는 것을 망설이지 않습니다.<br />
+                기존에도 꾸준한 자기개발이 필수였던 게임 업계이지만, 특히 최근에는 AI 등 급격한 기술 발전으로 인해 변화에 적응하고 새로운 기술을 받아들이는 능력이 더욱 중요해졌다고
+                생각합니다.<br />
+                급변하는 업계 트랜드 속에서, 다양한 기술을 통한 효율적인 일처리로 폭넓은 업무를 책임질 수 있는 든든한 업무 파트너가 되겠습니다.
+            </div>
+            <div class="divider"></div>
+            <div class="section-lower">
+                <div class="example-text">
+                    <div class="example-label-wrapper">
+                        <div class="example-label">예시</div>
+                    </div>
+                    <div class="example-description">
+                        관련 기획서를 여러 차례 작성하면서, 다소 복잡한 기획 아이디어를 단순 텍스트와 레퍼런스 이미지만으로 전달하는 데에는 한계가 있음을 느꼈습니다.<br />
+                        이를 극복하기 위해 Blender, Cascadeur를 독학해 3D 캐릭터의 스킬 모션 샘플을 제작하거나, 픽셀 그래픽 툴인 Aseprite를 활용해 직접 2D 애니메이션을 제작하는
+                        등 보다 구체적인 시각 자료를 전달할 수 있는 역량을 길렀습니다.<br />
+                        또한 기획 단계에서 직접 아이디어의 재미와 타당성을 검증할 수 있다면 더욱 합리적이고 신속한 개선작업이 가능할 것이라고 생각하여 C#과 Unity를 활용한 구현 능력을 함께 발전시켰고, 실제로 게임을 직접 제작하고 개선 작업을 거치며
+                        아이디어를 글에 머무르게 하지 않는 실체화 능력을 갖추게 되었습니다.<br />
+                        이처럼 기획의 완성도를 높이기 위한 다양한 발전 과정을 거치며 더욱 현실적이고 정제된 기획안을 작성하는 노하우를 축적할 수 있었고, 동시에 게임 제작의 전체 흐름과 직무 간
+                        연결성에 대한 이해도 또한 높일 수 있었습니다.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 카드 4 -->
+<div class="strength-box collapsed fourth-card">
+    <div class="section-header" onclick="toggleCard(this)">
+        <div class="title-label">풍부한 게임 경험</div>
+        <div class="arrow-icon">▼</div>
+    </div>
+    <div class="section-content">
+        <div class="description">
+            최근 5년간 38개 장르의 게임을 110종 이상 플레이했으며, 누적 13000시간 이상의 게임플레이 시간을 기록했습니다.
+            <br>
+            단순히 게임을 많이 했음이 아니라, 장르와 플랫폼에 구애받지 않은 다양한 게임 경험으로 기획 아이디어의 밑바탕이 될 레퍼런스를 많이 누적하였고,
+            게임을 즐기는 동시에 각 게임의 강점과 개선점을 발견하고 분석하는 과정을 병행하며 기획자적 시선을 함께 발전시켜 왔음을 강조드리고 싶습니다.
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="section-lower" style="padding-left: 1.5rem; padding-top: 0rem;">
+            <div class="project-row" style="display: flex; align-items: center; gap: 0.6rem;">
+                <img src="image/icon-excel.svg" class="project-icon" alt="엑셀 아이콘" />
+                <a href="https://docs.google.com/spreadsheets/d/1VjPsRXRLjw6OoJ43mc03mZxqU0mKQLO4/export?format=xlsx"
+                    target="_blank" rel="noopener noreferrer" class="project-attachment-link">
+                    플레이한 게임 리스트_박우진.xlsx
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+    <script>
+        function toggleCard(header) {
+            const box = header.closest(".strength-box");
+            const arrow = header.querySelector(".arrow-icon");
+            const wasCollapsed = box.classList.contains("collapsed");
+            const isFirstCard = box.classList.contains("first");
+
+            box.classList.toggle("collapsed");
+            arrow.textContent = wasCollapsed ? "▲" : "▼";
+
+            if (wasCollapsed && !isFirstCard) {
+                setTimeout(() => {
+                    const boxTop = box.getBoundingClientRect().top + window.scrollY;
+                    window.scrollTo({ top: boxTop - 20, behavior: "smooth" });
+                }, 100);
+            } else if (!wasCollapsed && isFirstCard) {
+                const preserveY = box.getBoundingClientRect().top + window.scrollY;
+                setTimeout(() => {
+                    window.scrollTo({ top: preserveY, behavior: "auto" });
+                }, 100);
+            }
+        }
+
+        function openModal(src) {
+            const modal = document.getElementById("image-modal");
+            const modalImg = document.getElementById("modal-img");
+            modal.style.display = "block";
+            modalImg.src = src;
+        }
+
+        function closeModal() {
+            document.getElementById("image-modal").style.display = "none";
+        }
+        function openVideoModal() {
+    const modal = document.getElementById("video-modal");
+    const frame = document.getElementById("youtube-frame");
+
+    // 여기에 네 유튜브 링크 삽입 (embed 형식으로!)
+    frame.src = "https://www.youtube.com/embed/iSpsBR0iWTk?autoplay=1";
+    modal.style.display = "block";
+}
+
+function closeVideoModal() {
+    const modal = document.getElementById("video-modal");
+    const frame = document.getElementById("youtube-frame");
+
+    modal.style.display = "none";
+    frame.src = ""; // 닫을 때 영상 정지
+}
+
+    </script>
+
+    <!-- 이미지 모달 -->
+    <div id="image-modal" class="modal" onclick="closeModal()">
+        <span class="modal-close">&times;</span>
+        <img class="modal-content" id="modal-img">
+    </div>
+<!-- 영상 모달 -->
+<div id="video-modal" class="modal" onclick="closeVideoModal()">
+    <span class="modal-close">&times;</span>
+    <div class="video-container">
+        <iframe id="youtube-frame"
+        src=""
+        width="100%"
+        height="100%"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen>
+        </iframe>
+    </div>
+</div>
+</body>
+
+</html>

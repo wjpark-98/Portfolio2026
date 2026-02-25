@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1024" />
+    <title>사용 툴 소개</title>
+    <style>
+        body {
+            margin: 0;
+            background: #d3d3d3;
+            font-family: 'NanumSquareOTF', sans-serif;
+        }
+
+        .tool-bar {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            background: #fff;
+            padding: 1rem;
+            border-radius: 0.6rem;
+            margin: 2rem auto;
+            width: fit-content;
+            box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .tool-bar img {
+            width: 3rem;
+            height: 3rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .tool-bar img:hover {
+            transform: scale(1.1);
+        }
+
+        .main-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            /* ✅ 이렇게 바꾸면 고정됨 */
+            background: #fff;
+            padding: 2rem;
+            margin: 1rem auto;
+            border-radius: 1rem;
+            width: 80%;
+            max-width: 1000px;
+            box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .main-text {
+            position: relative;
+            flex: 1;
+            padding-right: 2rem;
+
+        }
+
+
+        .main-text h2 {
+            margin: 0 0 1.5rem 0;
+            font-size: 1.8rem;
+        }
+
+
+
+
+        .main-image {
+            width: 200px;
+            height: 150px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            border: 1px solid #ccc;
+            border-radius: 0.5rem;
+        }
+
+
+        .subtools-section {
+            width: 80%;
+            max-width: 1000px;
+            margin: 2rem auto;
+        }
+
+        .subtools-section h3 {
+            background: #000;
+            color: #fff;
+            padding: 0.4rem 1rem;
+            display: inline-block;
+            border-radius: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .subtool-card {
+            background: #fff;
+            border-radius: 0.6rem;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            margin-top: 1rem;
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .subtool-card img {
+            width: 2rem;
+            height: 2rem;
+            margin-right: 1rem;
+        }
+
+        body {
+            margin: 0;
+            background-image: url("image/bg.png");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: scroll;
+            overflow-x: hidden;
+        }
+
+        .background-title {
+            position: absolute;
+            top: -1rem;
+            left: 2rem;
+            font-size: 6rem;
+            font-weight: 800;
+            color: rgba(0, 0, 0, 0.05);
+            pointer-events: none;
+            z-index: 0;
+            user-select: none;
+        }
+
+        .ability-wrapper {
+            margin-top: 8rem;
+            /* ⬅ 원하면 5rem, 8rem 등으로 조정 가능 */
+        }
+
+        .tool-header {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-bottom: 1rem;
+        }
+
+
+        .level-badge {
+            display: inline-block;
+            background: #000;
+            color: #fff;
+            padding: 0.3rem 0.6rem;
+            border-radius: 1rem;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            position: relative;
+            top: -2px;
+            /* ← 이걸 유지하되, 배경 스타일은 절대 없애지 말 것 */
+        }
+
+
+        .tool-title-group {
+            display: flex;
+            align-items: baseline;
+            /* 🔥 핵심: 글꼴 기준선 정렬 */
+            gap: 0.6rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tool-bar .tool-icon {
+            width: 3.5rem;
+            height: 3.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+
+        .tool-bar .tool-icon:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .tool-bar .tool-icon.active-tool {
+            background: #111;
+        }
+
+        /* 모달 기본 스타일 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            padding-top: 60px;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        /* 확대된 이미지 스타일 */
+        .modal-content {
+            display: block;
+            margin: auto;
+            max-width: 80%;
+            max-height: 80%;
+            border-radius: 0.5rem;
+        }
+
+        /* 닫기 버튼 */
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            color: #fff;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+
+
+        #tool-description {
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background-title">ABILITY</div>
+    <div class="ability-wrapper"> <!-- ✅ 새로 추가 -->
+
+        <div class="tool-bar">
+            <div class="tool-icon" data-tool="PowerPoint" onclick="selectTool('PowerPoint')">
+                <img src="image/ppt.svg">
+            </div>
+            <div class="tool-icon" data-tool="Excel" onclick="selectTool('Excel')">
+                <img src="image/excel.svg">
+            </div>
+            <div class="tool-icon" data-tool="Word" onclick="selectTool('Word')">
+                <img src="image/word.svg">
+            </div>
+            <div class="tool-icon" data-tool="Unity" onclick="selectTool('Unity')">
+                <img src="image/unity.svg">
+            </div>
+            <div class="tool-icon" data-tool="Unreal" onclick="selectTool('Unreal')">
+                <img src="image/unreal.svg">
+            </div>
+            <div class="tool-icon" data-tool="Blender" onclick="selectTool('Blender')">
+                <img src="image/blender.svg">
+            </div>
+            <div class="tool-icon" data-tool="Cascadeur" onclick="selectTool('Cascadeur')">
+                <img src="image/cascadeur.svg">
+            </div>
+            <div class="tool-icon" data-tool="SketchUp" onclick="selectTool('SketchUp')">
+                <img src="image/sketchup.svg">
+            </div>
+        </div>
+
+
+        <div class="main-display">
+            <div class="main-text">
+                <div class="tool-title-group">
+                    <h2 id="tool-title">MS Office PowerPoint</h2>
+                    <div class="level-badge" id="tool-level">활용 수준: A</div>
+                </div>
+                <p id="tool-description">
+                    기획 주제에 적합한 형태로 미적 감각과 가독성을 갖추어 이해하기 쉬운 양질의 문서를 작성할 수 있습니다.
+
+                </p>
+
+                </p>
+            </div>
+            <div class="main-image" id="tool-image"></div>
+        </div>
+
+
+
+
+
+        <div class="subtools-section">
+            <h3>그 외에도..</h3>
+            <div class="subtool-card">
+                <img src="image/chatgpt.svg">
+                <div><strong>ChatGPT</strong> - 아이디어 정리, 코드 보조, 자료 조사 등 다양한 작업에 활용하여 1인 게임 개발을 완료했습니다.</div>
+            </div>
+            <div class="subtool-card">
+                <img src="image/aseprite.svg">
+                <div><strong>Aseprite</strong> - Aseprite, Piskel 등의 스프라이트 에디터를 통해 이미지, 애니메이션 작업이 가능합니다.
+                </div>
+            </div>
+            <div class="subtool-card">
+                <img src="image/svn.svg">
+                <div><strong>Tortoise SVN</strong> - Tortoise SVN, Git등 버전 관리 도구의 활용이 가능합니다.
+                </div>
+            </div>
+            <div class="subtool-card">
+                <img src="image/audacity.svg">
+                <div><strong>Audacity</strong> - Audacity 등 음향 편집 도구를 사용해 게임에 활용될 효과음 샘플을 제작할 수 있습니다.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 모달 이미지 확대 뷰어 -->
+    <div id="image-modal" class="modal" onclick="closeModal()">
+        <span class="modal-close">&times;</span>
+        <img class="modal-content" id="modal-image">
+    </div>
+
+</body>
+
+<script>
+    const toolData = {
+        PowerPoint: {
+            title: 'MS Office PowerPoint',
+            level: '활용 수준: A',
+            desc: '기획 주제에 적합한 형태로 미적 감각과 가독성을 갖춘 양질의 문서를 작성할 수 있습니다.',
+            image: 'image/pptex.png'
+        },
+        Excel: {
+            title: 'MS Office Excel',
+            level: '활용 수준: B-',
+            desc: '표 및 피벗 테이블을 통해 데이터 관리가 가능하며, 특히 VLOOKUP, INDEX, MATCH 등의 함수로 효율적인 데이터 처리를 수행할 수 있습니다.',
+            image: 'image/excelex.png'
+        },
+        Word: {
+            title: 'MS Office Word',
+            level: '활용 수준: B',
+            desc: '워드 내 다양한 기능을 활용하여 가독성 높은 기획 문서를 빠르게 작성할 수 있습니다.',
+            image: 'image/wordex.png'
+        },
+        Unity: {
+            title: 'Unity / C#',
+            level: '활용 수준: B-',
+            desc: 'C#스크립트를 활용하여 각종 몬스터, 아이템, 장애물, UI의 로직 설계 및 구현이 가능하며, 이를 통해 실제 플레이 가능한 수준의 프로토타이핑이 가능합니다.',
+            image: 'image/unityex.png'
+        },
+        Unreal: {
+            title: 'Unreal / Blueprint',
+            level: '활용 수준: C',
+            desc: '머티리얼 적용, 지형 생성, 에셋 배치 등 기초 기능 위주의 사용 경험이 있습니다. Blueprint 또한 학습 중에 있습니다.',
+            image: 'image/unrealex.png'
+        },
+        Blender: {
+            title: 'Blender',
+            level: '활용 수준: B-',
+            desc: '자체적으로 전투, 스킬 모션의 샘플 제작이 가능하며, 이를 통해 그래픽 디자이너에게 스킬 제작에서의 구체적인 액션 의도를 전달할 수 있습니다.',
+            image: 'image/blenderex.png'
+        },
+        Cascadeur: {
+            title: 'Cascadeur',
+            level: '활용 수준: B',
+            desc: '프레임 보간, 오토포징 등의 기능 활용을 통한 다양한 애니메이팅이 가능하며, 직접 3D 캐릭터의 스킬 모션을 제작할 수 있습니다.',
+            image: 'image/cascadeurex.png'
+        },
+        SketchUp: {
+            title: 'SketchUp',
+            level: '활용 수준: B',
+            desc: '레벨 디자인 및 구조물과 소품의 프로토타입 제작이 가능하며, 이를 통해 기획 의도에 부합하는 다양한 시각 자료의 제시가 가능합니다.',
+            image: 'image/sketchex.png'
+        }
+    };
+
+
+    function selectTool(tool) {
+        const data = toolData[tool];
+        document.getElementById('tool-title').innerText = data.title;
+        document.getElementById('tool-level').innerText = data.level;
+        document.getElementById('tool-description').innerText = data.desc;
+        document.getElementById('tool-image').style.backgroundImage = `url(${data.image})`;
+
+        // 선택 아이콘 강조 처리
+        const iconWrappers = document.querySelectorAll('.tool-bar .tool-icon');
+        iconWrappers.forEach(div => div.classList.remove('active-tool'));
+
+        const clicked = [...iconWrappers].find(div => div.getAttribute('data-tool') === tool);
+        if (clicked) {
+            clicked.classList.add('active-tool');
+        }
+    }
+
+    // 이미지 클릭 시 모달 표시
+document.getElementById('tool-image').addEventListener('click', function () {
+    const currentImage = this.style.backgroundImage;
+    if (currentImage) {
+        const urlMatch = currentImage.match(/url\("?(.+?)"?\)/);
+        if (urlMatch && urlMatch[1]) {
+            const modal = document.getElementById('image-modal');
+            const modalImg = document.getElementById('modal-image');
+            modalImg.src = urlMatch[1];
+            modal.style.display = "block";
+        }
+    }
+});
+
+// 모달 닫기
+function closeModal() {
+    document.getElementById('image-modal').style.display = "none";
+}
+
+
+    // 페이지 처음 로드될 때 PowerPoint 선택 처리
+    window.addEventListener('DOMContentLoaded', () => {
+        selectTool('PowerPoint');
+    });
+</script>
+
+</body>
+
+</html>
